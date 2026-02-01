@@ -5,11 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ThreadAI - Clothing Classification</title>
-
-    
     <style>
-        
-
         :root {
             --bg-primary: #0F1119;
             --bg-secondary: #1a1d2e;
@@ -177,6 +173,10 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .upload-area::before {
@@ -211,6 +211,15 @@
             opacity: 1;
         }
 
+        .upload-placeholder {
+            text-align: center;
+            z-index: 1;
+        }
+
+        .upload-placeholder.hidden {
+            display: none;
+        }
+
         .upload-icon {
             font-size: 5rem;
             margin-bottom: 25px;
@@ -233,27 +242,34 @@
             display: none;
         }
 
-        .preview-section {
-            display: none;
-            margin-top: 40px;
-        }
-
-        .preview-section.active {
-            display: block;
-        }
-
         .image-preview {
-            max-width: 550px;
-            margin: 0 auto 35px;
-            border-radius: 20px;
+            display: none;
+            max-width: 100%;
+            max-height: 500px;
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-            border: 2px solid var(--border-color);
+            z-index: 1;
+        }
+
+        .image-preview.active {
+            display: block;
         }
 
         .image-preview img {
             width: 100%;
-            height: auto;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            max-height: 500px;
+        }
+
+        .preview-section {
+            display: none;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .preview-section.active {
             display: block;
         }
 
@@ -292,13 +308,14 @@
         }
 
         @keyframes fadeIn {
-            from { 
-                opacity: 0; 
-                transform: translateY(30px); 
+            from {
+                opacity: 0;
+                transform: translateY(30px);
             }
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
@@ -393,8 +410,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .loading p {
@@ -482,7 +504,6 @@
             🌙
         </button>
     </div>
-    
     <div class="container">
         <header>
             <h1>ThreadAI✨</h1>
@@ -498,31 +519,28 @@
                 </div>
             </div>
         </header>
-    
         <div class="main-content">
             <div class="upload-section">
                 <div class="upload-area" id="uploadArea">
-                    <div class="upload-icon">📸</div>
-                    <div class="upload-text">Click to upload or drag & drop</div>
-                    <div class="upload-subtext">Upload a clothing image to classify</div>
+                    <div class="upload-placeholder" id="uploadPlaceholder">
+                        <div class="upload-icon">📸</div>
+                        <div class="upload-text">Click to upload or drag & drop</div>
+                        <div class="upload-subtext">Upload a clothing image to classify</div>
+                    </div>
+                    <div class="image-preview" id="imagePreview"></div>
                 </div>
                 <input type="file" id="fileInput" accept="image/*">
             </div>
-    
             <div class="preview-section" id="previewSection">
-                <div class="image-preview" id="imagePreview"></div>
                 <div style="text-align: center;">
                     <button class="analyze-btn" id="analyzeBtn">Analyze Image</button>
                 </div>
             </div>
-    
             <div class="loading" id="loading">
                 <div class="spinner"></div>
                 <p>Analyzing your image with ResNet50...</p>
             </div>
-    
             <div class="error-message" id="errorMessage"></div>
-    
             <div class="results-section" id="resultsSection">
                 <h2 style="text-align: center; color: #333; margin-bottom: 30px;">Classification Results</h2>
                 <div class="results-grid">
@@ -548,7 +566,6 @@
                 </div>
             </div>
         </div>
-    
         <footer>
             <p><strong>Dataset: 8,000+ Images Scraped from Myntra using Selenium</strong></p>
             <p style="margin-top: 10px;">
@@ -558,25 +575,23 @@
                     📊 View Dataset on Kaggle
                 </a>
             </p>
-            <p class="tech-stack" style="margin-top: 15px;">ResNet50 | FastAPI | Deep Learning | Computer Vision | Selenium
+            <p class="tech-stack" style="margin-top: 15px;">ResNet50 | FastAPI | Deep Learning | Computer Vision |
+                Selenium
                 Web Scraping</p>
             <p style="margin-top: 10px; font-size: 0.85rem; opacity: 0.8;">3,000+ views • 550+ downloads on Kaggle</p>
         </footer>
     </div>
-
     <script>
         /* ===============================
-        THEME TOGGLE 
-        =============================== */
+                THEME TOGGLE 
+                =============================== */
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
-
         const currentTheme = localStorage.getItem('theme') || 'dark';
         if (currentTheme === 'light') {
             body.classList.add('light-mode');
             themeToggle.textContent = '☀️';
         }
-
         themeToggle.addEventListener('click', () => {
             body.classList.toggle('light-mode');
             if (body.classList.contains('light-mode')) {
@@ -587,14 +602,10 @@
                 localStorage.setItem('theme', 'dark');
             }
         });
-
         /* =====================================================
-        (API LOGIC)
-        ===================================================== */
-
-        //  SINGLE THREADAI ENDPOINT
+                (API LOGIC)
+                ===================================================== */
         const THREADAI_API_ENDPOINT = "http://127.0.0.1:8000/api/threadai/predict";
-
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
         const previewSection = document.getElementById('previewSection');
@@ -604,88 +615,71 @@
         const resultsSection = document.getElementById('resultsSection');
         const errorMessage = document.getElementById('errorMessage');
         const newUploadBtn = document.getElementById('newUploadBtn');
-
         let selectedFile = null;
-
         uploadArea.addEventListener('click', () => fileInput.click());
-
         fileInput.addEventListener('change', e => handleFile(e.target.files[0]));
-
         uploadArea.addEventListener('dragover', e => {
             e.preventDefault();
             uploadArea.classList.add('dragging');
         });
-
         uploadArea.addEventListener('dragleave', () =>
             uploadArea.classList.remove('dragging')
         );
-
         uploadArea.addEventListener('drop', e => {
             e.preventDefault();
             uploadArea.classList.remove('dragging');
             handleFile(e.dataTransfer.files[0]);
         });
-
         function handleFile(file) {
             if (!file || !file.type.startsWith('image/')) {
                 showError('Please upload a valid image file');
                 return;
             }
-
             selectedFile = file;
             const reader = new FileReader();
             reader.onload = e => {
+
+                document.getElementById('uploadPlaceholder').classList.add('hidden');
                 imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                imagePreview.classList.add('active');
+
                 previewSection.classList.add('active');
                 resultsSection.classList.remove('active');
                 errorMessage.classList.remove('active');
             };
             reader.readAsDataURL(file);
         }
-
         analyzeBtn.addEventListener('click', async () => {
             if (!selectedFile) return;
-
             loading.classList.add('active');
             resultsSection.classList.remove('active');
             errorMessage.classList.remove('active');
             analyzeBtn.disabled = true;
-
             try {
                 const formData = new FormData();
-                formData.append("image", selectedFile); // backend expects "image"
-
+                formData.append("image", selectedFile);
                 const response = await fetch(THREADAI_API_ENDPOINT, {
                     method: "POST",
                     body: formData
                 });
-
                 if (!response.ok) {
                     const err = await response.text();
                     throw new Error(err || "API failed");
                 }
-
                 const data = await response.json();
                 console.log("ThreadAI response:", data);
-
-                // ✅ MODEL-1 → CATEGORY
                 document.getElementById('categoryResult').textContent =
                     data.category?.label || "N/A";
-
                 document.getElementById('categoryConfidence').textContent =
                     data.category?.confidence
                         ? `Confidence: ${(data.category.confidence * 100).toFixed(1)}%`
                         : "Confidence: N/A";
-
-                // ✅ MODEL-2 → STYLE
                 document.getElementById('styleResult').textContent =
                     data.style?.label || "N/A";
-
                 document.getElementById('styleConfidence').textContent =
                     data.style?.confidence
                         ? `Confidence: ${(data.style.confidence * 100).toFixed(1)}%`
                         : "Confidence: N/A";
-
                 resultsSection.classList.add('active');
             } catch (error) {
                 console.error(error);
@@ -695,15 +689,17 @@
                 analyzeBtn.disabled = false;
             }
         });
-
         newUploadBtn.addEventListener('click', () => {
             fileInput.value = '';
             selectedFile = null;
+
+            document.getElementById('uploadPlaceholder').classList.remove('hidden');
+            imagePreview.classList.remove('active');
+            imagePreview.innerHTML = '';
             previewSection.classList.remove('active');
             resultsSection.classList.remove('active');
             errorMessage.classList.remove('active');
         });
-
         function showError(msg) {
             errorMessage.textContent = msg;
             errorMessage.classList.add('active');
