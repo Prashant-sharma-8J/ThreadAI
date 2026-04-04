@@ -16,7 +16,7 @@ A deep learning-powered web application that classifies men's clothing using two
 
 - **8,000+ images** scraped from Myntra using Selenium
 - Published on Kaggle: [E-Commerce Men's Clothing Dataset](https://www.kaggle.com/datasets/prashantsharma526/e-commerce-mens-clothing-dataset/data)
-- **2,840+ views** and **524+ downloads** in 10 days
+- **5,000+ views** and **1,000+ downloads** 
 - Clean, balanced dataset suitable for computer vision tasks
 
 ##  Tech Stack
@@ -25,7 +25,7 @@ A deep learning-powered web application that classifies men's clothing using two
 - **Backend**: FastAPI (Python)
 - **Model**: ResNet50 (fine-tuned)
 - **Data Collection**: Selenium WebDriver
-- **Deep Learning**: PyTorch/TensorFlow
+- **Deep Learning**: PyTorch
 
 ---
 
