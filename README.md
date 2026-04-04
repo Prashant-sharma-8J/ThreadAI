@@ -2,7 +2,7 @@
 
 A deep learning-powered web application that classifies men's clothing using two fine-tuned ResNet50 models, trained on 8,000+ images scraped from Myntra.
 
-## 🎯 Features
+##  Features
 
 - **Dual Model Classification**
   - Category Model: 94% accuracy (identifies specific items like jeans, cargo, formal shirt, etc.)
@@ -12,14 +12,14 @@ A deep learning-powered web application that classifies men's clothing using two
 - **Real-time predictions** from both models
 - **Responsive design** for all devices
 
-## 📊 Dataset
+##  Dataset
 
 - **8,000+ images** scraped from Myntra using Selenium
 - Published on Kaggle: [E-Commerce Men's Clothing Dataset](https://www.kaggle.com/datasets/prashantsharma526/e-commerce-mens-clothing-dataset/data)
 - **2,840+ views** and **524+ downloads** in 10 days
 - Clean, balanced dataset suitable for computer vision tasks
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - **Frontend**: HTML5, CSS3, JavaScript
 - **Backend**: FastAPI (Python)
@@ -30,7 +30,7 @@ A deep learning-powered web application that classifies men's clothing using two
 ---
 
 
-## 🔗 Important Links
+##  Important Links
 
 - **Live Demo**: 
 - **Kaggle Dataset**: https://www.kaggle.com/datasets/prashantsharma526/e-commerce-mens-clothing-dataset/data
@@ -38,19 +38,19 @@ A deep learning-powered web application that classifies men's clothing using two
 
 ---
 
-## 📝 License
+##  License
 
 This project is open source and available under the [MIT License](LICENSE).
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions, issues, and feature requests are welcome!
 
 ---
 
-## 👨‍💻 Author
+##  Author
 
 **Prashant Sharma**
 - Kaggle: [@prashantsharma526](https://www.kaggle.com/prashantsharma526)
