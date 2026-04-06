@@ -12,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 CATEGORY_MODEL_PATH = os.path.join(BASE_DIR, "resnet50_best.pth")
-STYLE_MODEL_PATH = os.path.join(BASE_DIR, "resnet50_clothing_best.pth")
+STYLE_MODEL_PATH = os.path.join(BASE_DIR, "resnet50_style_best.pth")
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 IMG_SIZE = 224
@@ -37,23 +37,20 @@ category_model.load_state_dict(category_checkpoint["model_state"])
 category_model.to(DEVICE)
 category_model.eval()
 
-STYLE_CLASSES = [
-    "casual_shirts",
-    "formal_pants",
-    "formal_shirts",
-    "jeans",
-    "men_cargos",
-    "printed_hoodies",
-    "printed_tshirts"
-]
+style_checkpoint = torch.load(STYLE_MODEL_PATH, map_location=DEVICE)
+
+STYLE_CLASSES = style_checkpoint["idx_to_class"]
 
 style_model = models.resnet50(weights=None)
-style_model.fc = nn.Linear(style_model.fc.in_features, len(STYLE_CLASSES))
-style_model.load_state_dict(
-    torch.load(STYLE_MODEL_PATH, map_location=DEVICE)
+style_model.fc = nn.Linear(
+    style_model.fc.in_features,
+    len(STYLE_CLASSES)
 )
+
+style_model.load_state_dict(style_checkpoint["model_state"])
 style_model.to(DEVICE)
 style_model.eval()
+
 
 app = FastAPI(title="ThreadAI Backend")
 
